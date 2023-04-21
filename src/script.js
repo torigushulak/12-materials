@@ -1,6 +1,23 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
+// textures
+const textureLoader = new THREE.TextureLoader();
+
+const colorTexture = textureLoader.load('/textures/door/color.jpg')
+const alphaTexture = textureLoader.load('/textures/door/alpha.jpg')
+const ambientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
+const heightTexture = textureLoader.load('/textures/door/height.jpg')
+const metalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
+const normalTexture = textureLoader.load('/textures/door/normal.jpg')
+const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
+const matcapTexture = textureLoader.load('/textures/matcaps/3.png')
+const gradientTexture = textureLoader.load('/textures/gradients/5.jpg')
+gradientTexture.minFilter = THREE.NearestFilter;
+gradientTexture.magFilter = THREE.NearestFilter;
+gradientTexture.generateMipmaps = false;
+
+
 /**
  * Base
  */
@@ -10,8 +27,38 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+
 // objects
-const material = new THREE.MeshBasicMaterial({color: 'red'})
+// const material = new THREE.MeshBasicMaterial()
+
+// material.map = colorTexture;
+// material.color.set('yellow');
+// material.color = new THREE.Color(0x00ff00);
+// material.opacity = 0.5;
+// material.transparent = true;
+// material.alphaMap = alphaTexture
+
+// can see the other side of plane
+// material.side = THREE.BackSide;
+// material.side = THREE.DoubleSide;
+
+// const material = new THREE.MeshNormalMaterial()
+// material.flatShading = true
+
+// const material = new THREE.MeshMatcapMaterial()
+// material.matcap = matcapTexture;
+
+// const material = new THREE.MeshDepthMaterial()
+
+// const material = new THREE.MeshLambertMaterial();
+
+// const material = new THREE.MeshPhongMaterial()
+// material.shininess = 100
+// changes color of reflection
+// material.specular = new THREE.Color(0xff00)
+
+const material = new THREE.MeshToonMaterial()
+material.gradientMap = gradientTexture;
 
 const sphere = new THREE.Mesh(
     new THREE.SphereGeometry(0.5, 16, 16),
@@ -31,6 +78,17 @@ const torus = new THREE.Mesh(
 torus.position.x = 1.5;
 
 scene.add(sphere, plane, torus);
+
+// lights
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+scene.add(ambientLight)
+
+const pointLight = new THREE.PointLight(0xffffff, 0.5)
+pointLight.position.x = 2
+pointLight.position.y = 3
+pointLight.position.z = 4
+scene.add(pointLight)
+
 
 /**
  * Sizes
